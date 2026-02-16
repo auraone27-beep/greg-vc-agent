@@ -44,7 +44,9 @@ export default function AIAnalysis({ startup }: { startup: Startup }) {
   };
 
   return (
-    <div className="flex flex-col h-[500px] glass-card">
+    <div className="flex flex-col h-[500px] relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)]">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto space-y-4 p-6">
         {messages.map((message, idx) => (
@@ -53,12 +55,13 @@ export default function AIAnalysis({ startup }: { startup: Startup }) {
             className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-[slideIn_0.3s_ease-out]`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-5 py-3 ${
+              className={`max-w-[85%] rounded-2xl px-5 py-3 relative overflow-hidden ${
                 message.role === 'user'
                   ? 'bg-blue-600/90 text-white border border-blue-500/50 shadow-lg shadow-blue-500/20'
-                  : 'bg-white/10 backdrop-blur-xl text-slate-100 border border-white/10'
+                  : 'bg-white/[0.08] backdrop-blur-xl text-slate-100 border border-white/[0.12]'
               }`}
             >
+              {message.role !== 'user' && <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />}
               <p className="text-sm whitespace-pre-wrap leading-relaxed font-[family-name:var(--font-inter)]">
                 {message.content}
               </p>
@@ -67,7 +70,8 @@ export default function AIAnalysis({ startup }: { startup: Startup }) {
         ))}
         {isLoading && (
           <div className="flex justify-start animate-[slideIn_0.3s_ease-out]">
-            <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-3">
+            <div className="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-2xl px-5 py-3 relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               <div className="flex items-center gap-2">
                 <div className="flex gap-1">
                   <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -85,13 +89,13 @@ export default function AIAnalysis({ startup }: { startup: Startup }) {
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSubmit} className="flex gap-3 p-6 border-t border-white/10 bg-white/5">
+      <form onSubmit={handleSubmit} className="flex gap-3 p-6 border-t border-white/10 bg-white/[0.03]">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about metrics, risks, market positioning..."
-          className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-[family-name:var(--font-inter)]"
+          className="flex-1 px-4 py-3 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-[family-name:var(--font-inter)]"
           disabled={isLoading}
         />
         <button

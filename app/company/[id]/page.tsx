@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import MetricsChart from '@/components/MetricsChart';
 import AIAnalysis from '@/components/AIAnalysis';
-import { CompanyNotFoundState } from '@/components/EmptyState';
 
 export function generateStaticParams() {
   return startups.map((startup) => ({
@@ -19,25 +18,45 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-100 relative">
-      <header className="border-b border-white/10 bg-white/5 backdrop-blur-2xl sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0a0a0f] text-slate-100 relative">
+      {/* Ambient Background Blobs */}
+      <div className="fixed inset-0 -z-10 bg-[#0a0a0f]">
+        <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-cyan-500/15 blur-[150px] animate-pulse" />
+        <div className="absolute bottom-[10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-violet-500/10 blur-[130px] animate-pulse" style={{ animationDelay: '4s' }} />
+      </div>
+
+      <header className="border-b border-white/10 bg-white/[0.04] backdrop-blur-2xl sticky top-0 z-50">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/" className="text-sm text-slate-400 hover:text-blue-400 mb-4 inline-flex items-center gap-2 transition-colors font-[family-name:var(--font-inter)]">
             <span>←</span> Back to Dashboard
           </Link>
           <div className="flex flex-col sm:flex-row items-start justify-between gap-6 mt-3">
             <div className="flex-1 min-w-0">
-              <h1 className="text-3xl sm:text-4xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-                {startup.name}
-              </h1>
+              <div className="flex items-center gap-3 mb-2">
+                {/* Company Logo Placeholder */}
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold flex-shrink-0 ${
+                  startup.status === 'Portfolio' 
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                }`}>
+                  {startup.name.slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <h1 className="text-3xl sm:text-4xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                    {startup.name}
+                  </h1>
+                </div>
+              </div>
               <p className="mt-2 text-base sm:text-lg text-slate-300 font-[family-name:var(--font-inter)]">
                 {startup.tagline}
               </p>
               <div className="flex flex-wrap items-center gap-3 mt-4">
-                <span className={`inline-flex px-3 py-1.5 text-sm font-semibold rounded-full ${
+                <span className={`inline-flex px-3 py-1.5 text-sm font-semibold rounded-full border ${
                   startup.status === 'Portfolio' 
-                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                    ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                    : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
                 }`}>
                   {startup.status}
                 </span>
@@ -54,7 +73,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
                 </span>
               </div>
             </div>
-            <div className="glass-card px-6 py-4 text-center flex-shrink-0">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] px-6 py-4 text-center flex-shrink-0">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <div className="text-xs text-slate-400 uppercase tracking-wider font-semibold mb-2 font-[family-name:var(--font-inter)]">
                 Deal Score
               </div>
@@ -78,7 +98,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             {/* Key Metrics */}
-            <div className="glass-card p-6 animate-[fadeIn_0.5s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.5s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
                 Financial Performance
               </h2>
@@ -135,12 +156,14 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Financials */}
-            <div className="glass-card p-6 animate-[fadeIn_0.6s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.6s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
                 Financial Structure
               </h2>
               <div className="grid grid-cols-2 gap-6">
-                <div className="glass-card p-5 bg-white/3">
+                <div className="relative overflow-hidden bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-xl p-5">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                   <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-2 font-[family-name:var(--font-inter)]">
                     Valuation
                   </div>
@@ -148,7 +171,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
                     ${(startup.financials.valuation / 1000000).toFixed(0)}M
                   </div>
                 </div>
-                <div className="glass-card p-5 bg-white/3">
+                <div className="relative overflow-hidden bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-xl p-5">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                   <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-2 font-[family-name:var(--font-inter)]">
                     Raising
                   </div>
@@ -158,7 +182,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
                 </div>
                 {startup.financials.invested && (
                   <>
-                    <div className="glass-card p-5 bg-emerald-500/5 border-emerald-500/20">
+                    <div className="relative overflow-hidden bg-emerald-500/5 backdrop-blur-xl border border-emerald-500/20 rounded-xl p-5">
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
                       <div className="text-xs text-emerald-400 uppercase tracking-wider font-semibold mb-2 font-[family-name:var(--font-inter)]">
                         Our Investment
                       </div>
@@ -166,7 +191,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
                         ${(startup.financials.invested / 1000000).toFixed(1)}M
                       </div>
                     </div>
-                    <div className="glass-card p-5 bg-emerald-500/5 border-emerald-500/20">
+                    <div className="relative overflow-hidden bg-emerald-500/5 backdrop-blur-xl border border-emerald-500/20 rounded-xl p-5">
+                      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
                       <div className="text-xs text-emerald-400 uppercase tracking-wider font-semibold mb-2 font-[family-name:var(--font-inter)]">
                         Ownership
                       </div>
@@ -180,13 +206,14 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Team */}
-            <div className="glass-card p-6 animate-[fadeIn_0.7s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.7s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
                 Executive Team
               </h2>
               <div className="space-y-5">
                 {startup.team.map((member, idx) => (
-                  <div key={idx} className="flex items-start gap-4 p-4 rounded-xl bg-white/3 hover:bg-white/5 transition-colors">
+                  <div key={idx} className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.05] transition-colors border border-white/[0.06]">
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-white/10 flex items-center justify-center text-lg font-bold text-white flex-shrink-0 font-[family-name:var(--font-space-grotesk)]">
                       {member.name.split(' ').map(n => n[0]).join('')}
                     </div>
@@ -207,13 +234,14 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Traction */}
-            <div className="glass-card p-6 animate-[fadeIn_0.8s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.8s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
                 Market Traction
               </h2>
               <ul className="space-y-3">
                 {startup.traction.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/3 transition-colors">
+                  <li key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/[0.03] transition-colors">
                     <span className="text-emerald-400 mt-0.5 flex-shrink-0 text-lg">✓</span>
                     <span className="text-slate-300 leading-relaxed font-[family-name:var(--font-inter)]">
                       {item}
@@ -224,13 +252,14 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Risks */}
-            <div className="glass-card p-6 animate-[fadeIn_0.9s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.9s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
                 Risk Assessment
               </h2>
               <ul className="space-y-3">
                 {startup.risks.map((risk, idx) => (
-                  <li key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/3 transition-colors">
+                  <li key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/[0.03] transition-colors">
                     <span className="text-amber-400 mt-0.5 flex-shrink-0 text-lg">⚠</span>
                     <span className="text-slate-300 leading-relaxed font-[family-name:var(--font-inter)]">
                       {risk}
@@ -243,7 +272,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
 
           <div className="lg:col-span-1 space-y-6">
             {/* Investment Thesis */}
-            <div className="glass-card p-6 animate-[fadeIn_0.5s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.5s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-lg font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)]">
                 Thesis Summary
               </h2>
@@ -261,7 +291,8 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Quick Info */}
-            <div className="glass-card p-6 animate-[fadeIn_0.7s_ease-out]">
+            <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 animate-[fadeIn_0.7s_ease-out]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               <h2 className="text-lg font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)]">
                 Company Information
               </h2>

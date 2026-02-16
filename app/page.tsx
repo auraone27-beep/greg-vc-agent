@@ -2,6 +2,44 @@ import { startups } from '@/lib/data/deals';
 import Link from 'next/link';
 import { PipelineEmptyState } from '@/components/EmptyState';
 
+// Sparkline component for portfolio value
+function Sparkline({ data, color = "#10B981" }: { data: number[]; color?: string }) {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  const width = data.length * 12;
+  const height = 40;
+  
+  const points = data.map((v, i) => {
+    const x = i * 12;
+    const y = height - ((v - min) / range) * 32 - 4;
+    return `${x},${y}`;
+  }).join(' ');
+  
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} className="w-24 h-10">
+      <defs>
+        <linearGradient id={`sparklineGradient-${color.replace('#', '')}`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon
+        points={`0,${height} ${points} ${width},${height}`}
+        fill={`url(#sparklineGradient-${color.replace('#', '')})`}
+      />
+      <polyline
+        points={points}
+        fill="none"
+        stroke={color}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Home() {
   const portfolio = startups.filter(s => s.status === 'Portfolio');
   const pipeline = startups.filter(s => s.status === 'Pipeline');
@@ -10,11 +48,22 @@ export default function Home() {
   const currentValue = portfolio.reduce((acc, s) => acc + (s.financials.valuation * (s.financials.ownership || 0) / 100), 0);
   const moic = currentValue / portfolioValue;
   const totalReturn = ((moic - 1) * 100);
+  
+  // Sample sparkline data for portfolio value trend
+  const portfolioTrend = [30, 35, 33, 42, 40, 48, 52, 58, 56, 64, 68, 72];
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-100 relative">
+    <div className="min-h-screen bg-[#0a0a0f] text-slate-100 relative">
+      {/* Ambient Background Blobs */}
+      <div className="fixed inset-0 -z-10 bg-[#0a0a0f]">
+        <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-cyan-500/15 blur-[150px] animate-pulse" />
+        <div className="absolute bottom-[10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-violet-500/10 blur-[130px] animate-pulse" style={{ animationDelay: '4s' }} />
+      </div>
+
       {/* Header */}
-      <header className="border-b border-white/10 bg-white/5 backdrop-blur-2xl sticky top-0 z-50">
+      <header className="border-b border-white/10 bg-white/[0.04] backdrop-blur-2xl sticky top-0 z-50">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
@@ -34,7 +83,7 @@ export default function Home() {
               </Link>
               <Link 
                 href="/pipeline" 
-                className="px-5 py-2.5 bg-white/10 backdrop-blur-xl text-white text-sm font-medium rounded-xl border border-white/10 hover:bg-white/15 hover:border-white/20 hover:shadow-lg transition-all duration-200"
+                className="px-5 py-2.5 bg-white/[0.08] backdrop-blur-xl text-white text-sm font-medium rounded-xl border border-white/[0.12] hover:bg-white/[0.12] hover:border-white/[0.16] hover:shadow-lg transition-all duration-200"
               >
                 Deal Pipeline
               </Link>
@@ -47,26 +96,35 @@ export default function Home() {
         {/* Key Metrics - First 3 Seconds Priority */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12 animate-[fadeIn_0.6s_ease-out]">
           {/* Portfolio Value Card */}
-          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
-            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
-              Portfolio Value
-            </div>
-            <div className="text-3xl sm:text-4xl font-bold text-white mb-2 font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
-              ${(currentValue / 1000000).toFixed(1)}M
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-emerald-400 font-semibold font-[family-name:var(--font-jetbrains-mono)]">
-                {moic.toFixed(2)}x MOIC
-              </span>
-              <span className="text-slate-500">·</span>
-              <span className="text-emerald-400 font-semibold">
-                +{totalReturn.toFixed(0)}%
-              </span>
+          <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_4px_12px_rgba(0,0,0,0.25)] hover:-translate-y-0.5 transition-all duration-200">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
+                  Portfolio Value
+                </div>
+                <div className="text-3xl sm:text-4xl font-bold text-white mb-2 font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
+                  ${(currentValue / 1000000).toFixed(1)}M
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-emerald-400 font-semibold font-[family-name:var(--font-jetbrains-mono)]">
+                    {moic.toFixed(2)}x MOIC
+                  </span>
+                  <span className="text-slate-500">·</span>
+                  <span className="text-emerald-400 font-semibold">
+                    +{totalReturn.toFixed(0)}%
+                  </span>
+                </div>
+              </div>
+              <div className="hidden sm:block">
+                <Sparkline data={portfolioTrend} color="#10B981" />
+              </div>
             </div>
           </div>
 
           {/* Portfolio Companies Card */}
-          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+          <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_4px_12px_rgba(0,0,0,0.25)] hover:-translate-y-0.5 transition-all duration-200">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
               Portfolio Companies
             </div>
@@ -81,7 +139,8 @@ export default function Home() {
           </div>
 
           {/* Active Pipeline Card */}
-          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+          <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_4px_12px_rgba(0,0,0,0.25)] hover:-translate-y-0.5 transition-all duration-200">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
               Deal Flow Pipeline
             </div>
@@ -96,7 +155,8 @@ export default function Home() {
           </div>
 
           {/* Avg Quality Score Card */}
-          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+          <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_4px_12px_rgba(0,0,0,0.25)] hover:-translate-y-0.5 transition-all duration-200">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
               Avg Deal Quality
             </div>
@@ -114,7 +174,8 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
             Recent Deal Activity
           </h2>
-          <div className="glass-card overflow-hidden">
+          <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)]">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="divide-y divide-white/5">
               {startups
                 .filter(s => s.financials.investmentDate || s.dealStage !== 'Sourced')
@@ -123,14 +184,19 @@ export default function Home() {
                   <Link 
                     key={startup.id}
                     href={`/company/${startup.id}`}
-                    className="block p-5 hover:bg-white/8 transition-all duration-200 group"
+                    className="block p-5 hover:bg-white/[0.05] transition-all duration-200 group"
                     style={{ animationDelay: `${idx * 50}ms` }}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div className="flex items-start sm:items-center gap-4">
-                        <div className={`w-2 h-2 rounded-full mt-1.5 sm:mt-0 flex-shrink-0 ${
-                          startup.status === 'Portfolio' ? 'bg-emerald-500 shadow-lg shadow-emerald-500/50' : 'bg-blue-500 shadow-lg shadow-blue-500/50'
-                        }`} />
+                        {/* Company Logo Placeholder */}
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${
+                          startup.status === 'Portfolio' 
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' 
+                            : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                        }`}>
+                          {startup.name.slice(0, 2).toUpperCase()}
+                        </div>
                         <div className="min-w-0 flex-1">
                           <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
                             {startup.name}
@@ -141,10 +207,20 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="flex items-center gap-4 sm:text-right flex-shrink-0">
-                        <div className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
+                        {/* Investment Amount */}
+                        {startup.financials.invested && (
+                          <div className="text-sm font-medium text-slate-300 font-[family-name:var(--font-jetbrains-mono)]">
+                            ${(startup.financials.invested / 1000000).toFixed(1)}M
+                          </div>
+                        )}
+                        <div className={`text-xs font-semibold px-3 py-1.5 rounded-full border ${
                           startup.status === 'Portfolio' 
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                            ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                            : startup.dealStage === 'Term Sheet' 
+                              ? 'bg-violet-500/20 text-violet-400 border-violet-500/30'
+                            : startup.dealStage === 'Due Diligence'
+                              ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                            : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
                         }`}>
                           {startup.dealStage}
                         </div>
@@ -176,17 +252,24 @@ export default function Home() {
               <Link
                 key={startup.id}
                 href={`/company/${startup.id}`}
-                className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 group"
+                className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-6 hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4),0_4px_12px_rgba(0,0,0,0.25)] hover:-translate-y-1 transition-all duration-200 group"
                 style={{ animationDelay: `${idx * 100}ms` }}
               >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-white text-lg group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
-                      {startup.name}
-                    </h3>
-                    <p className="text-sm text-slate-400 mt-1">
-                      {startup.sector}
-                    </p>
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    {/* Company Logo Placeholder */}
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {startup.name.slice(0, 2).toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-white text-lg group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)] truncate">
+                        {startup.name}
+                      </h3>
+                      <p className="text-sm text-slate-400 mt-0.5">
+                        {startup.sector}
+                      </p>
+                    </div>
                   </div>
                   <div className="text-right flex-shrink-0 ml-4">
                     <div className="text-lg font-bold text-emerald-400 font-[family-name:var(--font-jetbrains-mono)]">
@@ -227,7 +310,8 @@ export default function Home() {
               View all opportunities →
             </Link>
           </div>
-          <div className="glass-card overflow-hidden">
+          <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)]">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5 border-b border-white/10">
@@ -256,7 +340,8 @@ export default function Home() {
                   {pipeline.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="px-6 py-16">
-                        <div className="glass-card p-12 text-center relative overflow-hidden">
+                        <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] p-12 text-center">
+                          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                           <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
                             <div className="w-48 h-48 border-8 border-blue-500/30 rounded-full animate-pulse" />
                           </div>
@@ -287,10 +372,15 @@ export default function Home() {
                         >
                           <td className="px-6 py-4">
                             <Link href={`/company/${startup.id}`} className="block group">
-                              <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
-                                {startup.name}
+                              <div className="flex items-center gap-3">
+                                {/* Company Logo Placeholder */}
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xs font-bold flex-shrink-0">
+                                  {startup.name.slice(0, 2).toUpperCase()}
+                                </div>
+                                <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
+                                  {startup.name}
+                                </div>
                               </div>
-                              <div className="text-sm text-slate-400 mt-0.5">{startup.sector}</div>
                             </Link>
                           </td>
                           <td className="px-6 py-4 text-sm text-slate-300 hidden lg:table-cell">{startup.stage}</td>
@@ -312,7 +402,15 @@ export default function Home() {
                             </span>
                           </td>
                           <td className="px-6 py-4 hidden md:table-cell">
-                            <span className="inline-flex px-3 py-1.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                            <span className={`inline-flex px-3 py-1.5 text-xs font-semibold rounded-full border ${
+                              startup.dealStage === 'Term Sheet' 
+                                ? 'bg-violet-500/20 text-violet-400 border-violet-500/30'
+                                : startup.dealStage === 'Due Diligence'
+                                  ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
+                                : startup.dealStage === 'Partner Meeting'
+                                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                                : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                            }`}>
                               {startup.dealStage}
                             </span>
                           </td>

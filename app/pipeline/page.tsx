@@ -2,6 +2,26 @@ import { startups } from '@/lib/data/deals';
 import Link from 'next/link';
 import { PipelineEmptyState } from '@/components/EmptyState';
 
+// Helper to get status badge styling
+function getStatusBadgeClasses(dealStage: string) {
+  switch (dealStage) {
+    case 'Term Sheet':
+      return 'bg-violet-500/20 text-violet-400 border-violet-500/30';
+    case 'Due Diligence':
+      return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
+    case 'Partner Meeting':
+      return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+    case 'Deep Dive':
+      return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
+    case 'Initial Review':
+      return 'bg-slate-500/20 text-slate-400 border-slate-500/30';
+    case 'Sourced':
+      return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    default:
+      return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+  }
+}
+
 export default function PipelinePage() {
   const pipeline = startups.filter(s => s.status === 'Pipeline');
   
@@ -19,8 +39,16 @@ export default function PipelinePage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-100 relative">
-      <header className="border-b border-white/10 bg-white/5 backdrop-blur-2xl sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0a0a0f] text-slate-100 relative">
+      {/* Ambient Background Blobs */}
+      <div className="fixed inset-0 -z-10 bg-[#0a0a0f]">
+        <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-cyan-500/15 blur-[150px] animate-pulse" />
+        <div className="absolute bottom-[10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-violet-500/10 blur-[130px] animate-pulse" style={{ animationDelay: '4s' }} />
+      </div>
+
+      <header className="border-b border-white/10 bg-white/[0.04] backdrop-blur-2xl sticky top-0 z-50">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Link href="/" className="text-sm text-slate-400 hover:text-blue-400 mb-4 inline-flex items-center gap-2 transition-colors font-[family-name:var(--font-inter)]">
             <span>←</span> Back to Dashboard
@@ -35,7 +63,8 @@ export default function PipelinePage() {
               </p>
             </div>
             <div className="flex gap-3 w-full lg:w-auto">
-              <div className="glass-card px-5 py-3 text-center flex-1 lg:flex-initial">
+              <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] px-5 py-3 text-center flex-1 lg:flex-initial">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1 font-[family-name:var(--font-inter)]">
                   Due Diligence
                 </div>
@@ -43,7 +72,8 @@ export default function PipelinePage() {
                   {byStage['Due Diligence'].length}
                 </div>
               </div>
-              <div className="glass-card px-5 py-3 text-center flex-1 lg:flex-initial">
+              <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] px-5 py-3 text-center flex-1 lg:flex-initial">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1 font-[family-name:var(--font-inter)]">
                   Partner Review
                 </div>
@@ -51,7 +81,8 @@ export default function PipelinePage() {
                   {byStage['Partner Meeting'].length}
                 </div>
               </div>
-              <div className="glass-card px-5 py-3 text-center flex-1 lg:flex-initial">
+              <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)] px-5 py-3 text-center flex-1 lg:flex-initial">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                 <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1 font-[family-name:var(--font-inter)]">
                   Avg Quality
                 </div>
@@ -87,7 +118,8 @@ export default function PipelinePage() {
                   </div>
                 </div>
                 
-                <div className="glass-card overflow-hidden">
+                <div className="relative overflow-hidden bg-white/[0.04] backdrop-blur-2xl border border-white/[0.08] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3),0_2px_8px_rgba(0,0,0,0.2)]">
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead className="bg-white/5 border-b border-white/10">
@@ -128,11 +160,19 @@ export default function PipelinePage() {
                             >
                               <td className="px-6 py-4">
                                 <Link href={`/company/${startup.id}`} className="block">
-                                  <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
-                                    {startup.name}
-                                  </div>
-                                  <div className="text-sm text-slate-400 truncate max-w-xs mt-0.5 font-[family-name:var(--font-inter)]">
-                                    {startup.tagline}
+                                  <div className="flex items-center gap-3">
+                                    {/* Company Logo Placeholder */}
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 border ${getStatusBadgeClasses(startup.dealStage).replace('text-', 'bg-').replace('/20', '/30').split(' ')[0]} ${getStatusBadgeClasses(startup.dealStage).split(' ')[1]} ${getStatusBadgeClasses(startup.dealStage).split(' ')[2]}`}>
+                                      {startup.name.slice(0, 2).toUpperCase()}
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
+                                        {startup.name}
+                                      </div>
+                                      <div className="text-sm text-slate-400 truncate max-w-xs mt-0.5 font-[family-name:var(--font-inter)]">
+                                        {startup.tagline}
+                                      </div>
+                                    </div>
                                   </div>
                                 </Link>
                               </td>
@@ -161,11 +201,11 @@ export default function PipelinePage() {
                                 ${(startup.financials.raising / 1000000).toFixed(1)}M
                               </td>
                               <td className="px-6 py-4">
-                                <span className={`inline-flex items-center justify-center w-12 h-8 text-sm font-bold rounded-lg font-[family-name:var(--font-jetbrains-mono)] tabular-nums ${
-                                  startup.score >= 85 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                                  startup.score >= 75 ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                                  startup.score >= 65 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                                  'bg-slate-500/20 text-slate-400 border border-slate-500/30'
+                                <span className={`inline-flex items-center justify-center w-12 h-8 text-sm font-bold rounded-lg font-[family-name:var(--font-jetbrains-mono)] tabular-nums border ${
+                                  startup.score >= 85 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                                  startup.score >= 75 ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+                                  startup.score >= 65 ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' :
+                                  'bg-slate-500/20 text-slate-400 border-slate-500/30'
                                 }`}>
                                   {startup.score}
                                 </span>
