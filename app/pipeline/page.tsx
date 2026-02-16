@@ -1,5 +1,6 @@
 import { startups } from '@/lib/data/deals';
 import Link from 'next/link';
+import { PipelineEmptyState } from '@/components/EmptyState';
 
 export default function PipelinePage() {
   const pipeline = startups.filter(s => s.status === 'Pipeline');
@@ -65,30 +66,7 @@ export default function PipelinePage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
         {pipeline.length === 0 ? (
-          <div className="glass-card p-16 text-center relative overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center opacity-5">
-              <div className="w-64 h-64 border-8 border-blue-500/30 rounded-full animate-pulse"></div>
-            </div>
-            <div className="relative">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-500/10 to-violet-500/10 border border-blue-500/20 mb-6">
-                <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-3 font-[family-name:var(--font-space-grotesk)]">
-                Deal flow initialization
-              </h3>
-              <p className="text-slate-400 mb-8 max-w-md mx-auto leading-relaxed font-[family-name:var(--font-inter)]">
-                Sourcing engine active. Premium opportunities will surface here as they pass initial screening criteria.
-              </p>
-              <Link
-                href="/portfolio"
-                className="inline-flex px-6 py-3 bg-emerald-600/90 text-white text-sm font-semibold rounded-xl hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-200"
-              >
-                View Portfolio Companies
-              </Link>
-            </div>
-          </div>
+          <PipelineEmptyState />
         ) : (
           Object.entries(byStage).map(([stage, companies]) => 
             companies.length > 0 && (

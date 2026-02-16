@@ -1,5 +1,6 @@
 import { startups } from '@/lib/data/deals';
 import Link from 'next/link';
+import { PipelineEmptyState } from '@/components/EmptyState';
 
 export default function Home() {
   const portfolio = startups.filter(s => s.status === 'Portfolio');
@@ -254,10 +255,10 @@ export default function Home() {
                 <tbody className="divide-y divide-white/5">
                   {pipeline.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-16 text-center">
-                        <div className="relative">
-                          <div className="absolute inset-0 flex items-center justify-center opacity-5">
-                            <div className="w-32 h-32 border-4 border-blue-500/30 rounded-full animate-pulse"></div>
+                      <td colSpan={6} className="px-6 py-16">
+                        <div className="glass-card p-12 text-center relative overflow-hidden">
+                          <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                            <div className="w-48 h-48 border-8 border-blue-500/30 rounded-full animate-pulse" />
                           </div>
                           <div className="relative">
                             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/10 to-violet-500/10 border border-blue-500/20 mb-4">

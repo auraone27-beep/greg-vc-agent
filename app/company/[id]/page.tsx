@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import MetricsChart from '@/components/MetricsChart';
 import AIAnalysis from '@/components/AIAnalysis';
+import { CompanyNotFoundState } from '@/components/EmptyState';
 
 export function generateStaticParams() {
   return startups.map((startup) => ({
