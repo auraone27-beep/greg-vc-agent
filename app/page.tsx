@@ -8,106 +8,148 @@ export default function Home() {
   const portfolioValue = portfolio.reduce((acc, s) => acc + (s.financials.invested || 0), 0);
   const currentValue = portfolio.reduce((acc, s) => acc + (s.financials.valuation * (s.financials.ownership || 0) / 100), 0);
   const moic = currentValue / portfolioValue;
+  const totalReturn = ((moic - 1) * 100);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-xl">
+    <div className="min-h-screen bg-[#0F172A] text-slate-100 relative">
+      {/* Header */}
+      <header className="border-b border-white/10 bg-white/5 backdrop-blur-2xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white">Digital VC Fund</h1>
-              <p className="mt-1 text-sm text-slate-400">AI-powered venture capital intelligence</p>
+              <h1 className="text-3xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                Gregory Curtis
+              </h1>
+              <p className="mt-1 text-sm text-slate-400 font-[family-name:var(--font-inter)]">
+                Venture Capital Intelligence Platform
+              </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <Link 
                 href="/portfolio" 
-                className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700"
+                className="px-5 py-2.5 bg-emerald-600/90 text-white text-sm font-medium rounded-xl hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-200"
               >
-                Portfolio
+                Portfolio Performance
               </Link>
               <Link 
                 href="/pipeline" 
-                className="px-4 py-2 bg-slate-700 text-white text-sm font-medium rounded-lg hover:bg-slate-600"
+                className="px-5 py-2.5 bg-white/10 backdrop-blur-xl text-white text-sm font-medium rounded-xl border border-white/10 hover:bg-white/15 hover:border-white/20 hover:shadow-lg transition-all duration-200"
               >
-                Pipeline
+                Deal Flow Intelligence
               </Link>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6">
-            <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Portfolio Value</div>
-            <div className="mt-2 text-3xl font-bold text-white">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
+        {/* Key Metrics - First 3 Seconds Priority */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12 animate-[fadeIn_0.6s_ease-out]">
+          {/* Portfolio Value Card */}
+          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
+              Portfolio Value
+            </div>
+            <div className="text-3xl sm:text-4xl font-bold text-white mb-2 font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
               ${(currentValue / 1000000).toFixed(1)}M
             </div>
-            <div className="mt-1 text-sm text-emerald-400">
-              {moic.toFixed(2)}x MOIC
+            <div className="flex items-center gap-2 text-sm">
+              <span className="text-emerald-400 font-semibold font-[family-name:var(--font-jetbrains-mono)]">
+                {moic.toFixed(2)}x MOIC
+              </span>
+              <span className="text-slate-500">·</span>
+              <span className="text-emerald-400 font-semibold">
+                +{totalReturn.toFixed(0)}%
+              </span>
             </div>
           </div>
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6">
-            <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Portfolio Companies</div>
-            <div className="mt-2 text-3xl font-bold text-white">{portfolio.length}</div>
-            <div className="mt-1 text-sm text-slate-400">
-              ${(portfolioValue / 1000000).toFixed(1)}M deployed
+
+          {/* Portfolio Companies Card */}
+          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
+              Portfolio Companies
+            </div>
+            <div className="text-3xl sm:text-4xl font-bold text-white mb-2 font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
+              {portfolio.length}
+            </div>
+            <div className="text-sm text-slate-400">
+              <span className="font-[family-name:var(--font-jetbrains-mono)]">
+                ${(portfolioValue / 1000000).toFixed(1)}M
+              </span> deployed
             </div>
           </div>
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6">
-            <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Pipeline</div>
-            <div className="mt-2 text-3xl font-bold text-white">{pipeline.length}</div>
-            <div className="mt-1 text-sm text-slate-400">
-              {pipeline.filter(s => ['Due Diligence', 'Partner Meeting'].includes(s.dealStage)).length} in diligence
+
+          {/* Active Pipeline Card */}
+          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
+              Deal Flow Pipeline
+            </div>
+            <div className="text-3xl sm:text-4xl font-bold text-white mb-2 font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
+              {pipeline.length}
+            </div>
+            <div className="text-sm text-slate-400">
+              <span className="text-blue-400 font-semibold">
+                {pipeline.filter(s => ['Due Diligence', 'Partner Meeting'].includes(s.dealStage)).length}
+              </span> in active diligence
             </div>
           </div>
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6">
-            <div className="text-xs font-medium text-slate-400 uppercase tracking-wider">Avg Score</div>
-            <div className="mt-2 text-3xl font-bold text-white">
+
+          {/* Avg Quality Score Card */}
+          <div className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl transition-all duration-200">
+            <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 font-[family-name:var(--font-inter)]">
+              Portfolio Quality
+            </div>
+            <div className="text-3xl sm:text-4xl font-bold text-white mb-2 font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
               {Math.round(portfolio.reduce((acc, s) => acc + s.score, 0) / portfolio.length)}
             </div>
-            <div className="mt-1 text-sm text-emerald-400">
-              Portfolio quality
+            <div className="text-sm text-emerald-400 font-semibold">
+              Grade A portfolio
             </div>
           </div>
         </div>
 
         {/* Recent Activity */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl overflow-hidden">
-            <div className="divide-y divide-slate-800">
+        <div className="mb-12 animate-[fadeIn_0.8s_ease-out]">
+          <h2 className="text-2xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
+            Recent Activity
+          </h2>
+          <div className="glass-card overflow-hidden">
+            <div className="divide-y divide-white/5">
               {startups
                 .filter(s => s.financials.investmentDate || s.dealStage !== 'Sourced')
                 .slice(0, 5)
-                .map((startup) => (
+                .map((startup, idx) => (
                   <Link 
                     key={startup.id}
                     href={`/company/${startup.id}`}
-                    className="block p-4 hover:bg-slate-800/50 transition-colors"
+                    className="block p-5 hover:bg-white/8 transition-all duration-200 group"
+                    style={{ animationDelay: `${idx * 50}ms` }}
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-2 h-2 rounded-full ${
-                          startup.status === 'Portfolio' ? 'bg-emerald-500' : 'bg-blue-500'
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex items-start sm:items-center gap-4">
+                        <div className={`w-2 h-2 rounded-full mt-1.5 sm:mt-0 flex-shrink-0 ${
+                          startup.status === 'Portfolio' ? 'bg-emerald-500 shadow-lg shadow-emerald-500/50' : 'bg-blue-500 shadow-lg shadow-blue-500/50'
                         }`} />
-                        <div>
-                          <div className="font-semibold text-white">{startup.name}</div>
-                          <div className="text-sm text-slate-400">{startup.tagline}</div>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
+                            {startup.name}
+                          </div>
+                          <div className="text-sm text-slate-400 mt-0.5 truncate">
+                            {startup.tagline}
+                          </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className={`text-xs font-medium px-2 py-1 rounded ${
+                      <div className="flex items-center gap-4 sm:text-right flex-shrink-0">
+                        <div className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
                           startup.status === 'Portfolio' 
-                            ? 'bg-emerald-500/20 text-emerald-400'
-                            : 'bg-blue-500/20 text-blue-400'
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
                         }`}>
                           {startup.dealStage}
                         </div>
-                        <div className="mt-1 text-xs text-slate-500">
+                        <div className="text-xs text-slate-500 font-[family-name:var(--font-jetbrains-mono)] hidden sm:block">
                           {startup.financials.investmentDate 
-                            ? new Date(startup.financials.investmentDate).toLocaleDateString()
+                            ? new Date(startup.financials.investmentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                             : 'In pipeline'}
                         </div>
                       </div>
@@ -119,41 +161,52 @@ export default function Home() {
         </div>
 
         {/* Portfolio Highlights */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Portfolio Highlights</h2>
-            <Link href="/portfolio" className="text-sm text-emerald-400 hover:text-emerald-300">
-              View all →
+        <div className="mb-12 animate-[fadeIn_1s_ease-out]">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+              Portfolio Highlights
+            </h2>
+            <Link href="/portfolio" className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
+              View all portfolio →
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {portfolio.slice(0, 3).map((startup) => (
+            {portfolio.slice(0, 3).map((startup, idx) => (
               <Link
                 key={startup.id}
                 href={`/company/${startup.id}`}
-                className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl p-6 hover:border-slate-700 transition-colors"
+                className="glass-card p-6 hover:bg-white/8 hover:border-white/15 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 group"
+                style={{ animationDelay: `${idx * 100}ms` }}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="font-bold text-white text-lg">{startup.name}</h3>
-                    <p className="text-sm text-slate-400 mt-1">{startup.sector}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-white text-lg group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
+                      {startup.name}
+                    </h3>
+                    <p className="text-sm text-slate-400 mt-1">
+                      {startup.sector}
+                    </p>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm font-semibold text-emerald-400">{startup.score}</div>
-                    <div className="text-xs text-slate-500">Score</div>
+                  <div className="text-right flex-shrink-0 ml-4">
+                    <div className="text-lg font-bold text-emerald-400 font-[family-name:var(--font-jetbrains-mono)]">
+                      {startup.score}
+                    </div>
+                    <div className="text-xs text-slate-500">Quality</div>
                   </div>
                 </div>
-                <p className="text-sm text-slate-300 mb-4">{startup.tagline}</p>
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-800">
+                <p className="text-sm text-slate-300 mb-6 line-clamp-2">
+                  {startup.tagline}
+                </p>
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
                   <div>
-                    <div className="text-xs text-slate-500">ARR</div>
-                    <div className="text-sm font-semibold text-white">
+                    <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">ARR</div>
+                    <div className="text-base font-bold text-white font-[family-name:var(--font-jetbrains-mono)]">
                       ${(startup.metrics.arr / 1000000).toFixed(1)}M
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-500">Growth</div>
-                    <div className="text-sm font-semibold text-emerald-400">
+                    <div className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Growth</div>
+                    <div className="text-base font-bold text-emerald-400 font-[family-name:var(--font-jetbrains-mono)]">
                       {startup.metrics.revenueGrowth}%
                     </div>
                   </div>
@@ -164,75 +217,98 @@ export default function Home() {
         </div>
 
         {/* Top Pipeline Deals */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Top Pipeline Deals</h2>
-            <Link href="/pipeline" className="text-sm text-blue-400 hover:text-blue-300">
-              View all →
+        <div className="animate-[fadeIn_1.2s_ease-out]">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+              Premium Deal Flow
+            </h2>
+            <Link href="/pipeline" className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors">
+              View full pipeline →
             </Link>
           </div>
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-xl overflow-hidden">
+          <div className="glass-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50">
+                <thead className="bg-white/5 border-b border-white/10">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider font-[family-name:var(--font-inter)]">
                       Company
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider font-[family-name:var(--font-inter)] hidden lg:table-cell">
                       Stage
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider font-[family-name:var(--font-inter)]">
                       ARR
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider font-[family-name:var(--font-inter)] hidden sm:table-cell">
                       Growth
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider font-[family-name:var(--font-inter)]">
                       Score
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-400 uppercase tracking-wider font-[family-name:var(--font-inter)] hidden md:table-cell">
                       Deal Stage
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
-                  {pipeline
-                    .sort((a, b) => b.score - a.score)
-                    .slice(0, 8)
-                    .map((startup) => (
-                      <tr key={startup.id} className="hover:bg-slate-800/30">
-                        <td className="px-6 py-4">
-                          <Link href={`/company/${startup.id}`} className="block">
-                            <div className="font-semibold text-white">{startup.name}</div>
-                            <div className="text-sm text-slate-400">{startup.sector}</div>
-                          </Link>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-slate-300">{startup.stage}</td>
-                        <td className="px-6 py-4 text-sm font-semibold text-white">
-                          ${(startup.metrics.arr / 1000000).toFixed(1)}M
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-sm font-semibold text-emerald-400">
-                            {startup.metrics.revenueGrowth}%
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`text-sm font-bold ${
-                            startup.score >= 80 ? 'text-emerald-400' :
-                            startup.score >= 70 ? 'text-blue-400' :
-                            'text-slate-400'
-                          }`}>
-                            {startup.score}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex px-2 py-1 text-xs font-medium rounded bg-blue-500/20 text-blue-400">
-                            {startup.dealStage}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                <tbody className="divide-y divide-white/5">
+                  {pipeline.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-16 text-center">
+                        <div className="text-slate-500">
+                          <div className="text-4xl mb-3">📊</div>
+                          <div className="text-lg font-semibold text-slate-400 font-[family-name:var(--font-space-grotesk)]">
+                            Your deal pipeline awaits
+                          </div>
+                          <div className="text-sm text-slate-500 mt-2">
+                            New opportunities will appear here as they're sourced
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    pipeline
+                      .sort((a, b) => b.score - a.score)
+                      .slice(0, 8)
+                      .map((startup) => (
+                        <tr 
+                          key={startup.id} 
+                          className="hover:bg-white/5 transition-colors duration-150"
+                        >
+                          <td className="px-6 py-4">
+                            <Link href={`/company/${startup.id}`} className="block group">
+                              <div className="font-semibold text-white group-hover:text-blue-400 transition-colors font-[family-name:var(--font-space-grotesk)]">
+                                {startup.name}
+                              </div>
+                              <div className="text-sm text-slate-400 mt-0.5">{startup.sector}</div>
+                            </Link>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-slate-300 hidden lg:table-cell">{startup.stage}</td>
+                          <td className="px-6 py-4 text-sm font-bold text-white font-[family-name:var(--font-jetbrains-mono)] tabular-nums">
+                            ${(startup.metrics.arr / 1000000).toFixed(1)}M
+                          </td>
+                          <td className="px-6 py-4 hidden sm:table-cell">
+                            <span className="text-sm font-bold text-emerald-400 font-[family-name:var(--font-jetbrains-mono)]">
+                              {startup.metrics.revenueGrowth}%
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`text-sm font-bold font-[family-name:var(--font-jetbrains-mono)] ${
+                              startup.score >= 80 ? 'text-emerald-400' :
+                              startup.score >= 70 ? 'text-blue-400' :
+                              'text-slate-400'
+                            }`}>
+                              {startup.score}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 hidden md:table-cell">
+                            <span className="inline-flex px-3 py-1.5 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                              {startup.dealStage}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                  )}
                 </tbody>
               </table>
             </div>

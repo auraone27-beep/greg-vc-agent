@@ -1,7 +1,7 @@
 'use client';
 
 import { Startup } from '@/lib/data/deals';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -17,6 +17,15 @@ export default function AIAnalysis({ startup }: { startup: Startup }) {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,45 +44,60 @@ export default function AIAnalysis({ startup }: { startup: Startup }) {
   };
 
   return (
-    <div className="flex flex-col h-96">
-      <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+    <div className="flex flex-col h-[500px] glass-card">
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto space-y-4 p-6">
         {messages.map((message, idx) => (
           <div
             key={idx}
-            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-[slideIn_0.3s_ease-out]`}
           >
             <div
-              className={`max-w-[85%] rounded-lg px-4 py-2 ${
+              className={`max-w-[85%] rounded-2xl px-5 py-3 ${
                 message.role === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-800 text-slate-100'
+                  ? 'bg-blue-600/90 text-white border border-blue-500/50 shadow-lg shadow-blue-500/20'
+                  : 'bg-white/10 backdrop-blur-xl text-slate-100 border border-white/10'
               }`}
             >
-              <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+              <p className="text-sm whitespace-pre-wrap leading-relaxed font-[family-name:var(--font-inter)]">
+                {message.content}
+              </p>
             </div>
           </div>
         ))}
         {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-slate-800 rounded-lg px-4 py-2">
-              <p className="text-sm text-slate-400">Analyzing...</p>
+          <div className="flex justify-start animate-[slideIn_0.3s_ease-out]">
+            <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-3">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <span className="text-sm text-slate-400 ml-1 font-[family-name:var(--font-inter)]">
+                  Analyzing...
+                </span>
+              </div>
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      {/* Input Area */}
+      <form onSubmit={handleSubmit} className="flex gap-3 p-6 border-t border-white/10 bg-white/5">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask about metrics, risks, market..."
-          className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ask about metrics, risks, market positioning..."
+          className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all font-[family-name:var(--font-inter)]"
+          disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-3 bg-blue-600/90 text-white text-sm font-semibold rounded-xl hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-[family-name:var(--font-inter)]"
         >
           Send
         </button>
