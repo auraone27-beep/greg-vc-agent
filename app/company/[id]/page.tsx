@@ -79,7 +79,7 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             {/* Key Metrics */}
             <div className="glass-card p-6 animate-[fadeIn_0.5s_ease-out]">
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
-                Key Metrics
+                Financial Performance
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div>
@@ -181,7 +181,7 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             {/* Team */}
             <div className="glass-card p-6 animate-[fadeIn_0.7s_ease-out]">
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
-                Leadership Team
+                Executive Team
               </h2>
               <div className="space-y-5">
                 {startup.team.map((member, idx) => (
@@ -208,7 +208,7 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             {/* Traction */}
             <div className="glass-card p-6 animate-[fadeIn_0.8s_ease-out]">
               <h2 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
-                Traction Highlights
+                Market Traction
               </h2>
               <ul className="space-y-3">
                 {startup.traction.map((item, idx) => (
@@ -244,7 +244,7 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             {/* Investment Thesis */}
             <div className="glass-card p-6 animate-[fadeIn_0.5s_ease-out]">
               <h2 className="text-lg font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)]">
-                Investment Thesis
+                Thesis Summary
               </h2>
               <p className="text-sm text-slate-300 leading-relaxed font-[family-name:var(--font-inter)]">
                 {startup.thesis}
@@ -254,7 +254,7 @@ export default function CompanyPage({ params }: { params: { id: string } }) {
             {/* AI Analysis */}
             <div className="animate-[fadeIn_0.6s_ease-out]">
               <h2 className="text-lg font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)]">
-                AI Due Diligence
+                AI Analysis
               </h2>
               <AIAnalysis startup={startup} />
             </div>

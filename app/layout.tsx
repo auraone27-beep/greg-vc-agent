@@ -21,8 +21,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gregory Curtis — Venture Capital Intelligence",
-  description: "Premium AI-powered VC deal flow and portfolio management platform",
+  title: "Gregory Curtis — Venture Capital Intelligence Platform",
+  description: "AI-powered venture capital deal flow analysis and portfolio performance tracking",
 };
 
 export default function RootLayout({
