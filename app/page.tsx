@@ -53,13 +53,7 @@ export default function Home() {
   const portfolioTrend = [30, 35, 33, 42, 40, 48, 52, 58, 56, 64, 68, 72];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-slate-100 relative">
-      {/* Ambient Background Blobs */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f]">
-        <div className="absolute -top-[20%] -left-[10%] w-[600px] h-[600px] rounded-full bg-cyan-500/15 blur-[150px] animate-pulse" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-violet-500/10 blur-[130px] animate-pulse" style={{ animationDelay: '4s' }} />
-      </div>
+    <div className="min-h-screen text-slate-100 relative">
 
       {/* Header */}
       <header className="border-b border-white/10 bg-white/[0.04] backdrop-blur-2xl sticky top-0 z-50">
